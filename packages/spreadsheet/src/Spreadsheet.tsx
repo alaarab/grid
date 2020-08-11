@@ -1623,6 +1623,14 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           columnIndex,
           columnIndex + (rows.length && rows[0].length - 1)
         );
+        const newSelection = {
+          bounds: {
+            top: rowIndex,
+            left: columnIndex,
+            bottom: endRowIndex,
+            right: endColumnIndex,
+          }
+        }
 
         dispatch({
           type: ACTION_TYPE.PASTE,
@@ -1636,7 +1644,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         cellChangeCallback(
           id,
           activeCell,
-          selection === void 0 ? void 0 : [selection]
+          selection === void 0 ? [newSelection] : [selection, newSelection]
         );
 
         if (activeCell) {
@@ -1647,16 +1655,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         /* Should select */
         if (rowIndex === endRowIndex && columnIndex === endColumnIndex) return;
 
-        currentGrid.current?.setSelections([
-          {
-            bounds: {
-              top: rowIndex,
-              left: columnIndex,
-              bottom: endRowIndex,
-              right: endColumnIndex,
-            },
-          },
-        ]);
+        currentGrid.current?.setSelections([newSelection]);
       },
       []
     );
